@@ -4,8 +4,11 @@ from hashlib import sha256
 import httpx
 from flask import Flask, redirect, render_template, request, session
 
-from utils import SECRETS_DIR, error, merge_params, random_string
+from utils import SECRETS_DIR, error, get_logger, merge_params, random_string
 from utils import save_bot_token
+
+
+logger = get_logger(__name__)
 
 
 AUTH_BASE_URL = 'https://twitter.com/i/oauth2/authorize'
@@ -36,6 +39,7 @@ def update_bot():
         not password or
         MAIN_PASSWORD != sha256(str(password).encode()).hexdigest()
     ):
+        logger.warn(f'wrong password:\n{password}')
         return error('Invalid Password!')
 
     state = random_string()
