@@ -4,8 +4,7 @@ Description=Gort Bot
 [Service]
 Type=simple
 User=root
-# ExecStart=/nightcurly/.env/bin/python /site/nightcurly/Bot/run.py
-ExecStart=python main.py
+ExecStart=/site/gort/.env/bin/python /site/gort/bot/main.py
 Environment=PYTHONUNBUFFERED=1
 Restart=always
 
