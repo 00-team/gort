@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 AUTH_BASE_URL = 'https://twitter.com/i/oauth2/authorize'
 ACCESS_TOKEN_URL = 'https://api.twitter.com/2/oauth2/token'
-REDIRECT_URI = 'http://localhost:5000/callback/'
+REDIRECT_URI = 'https://gort.nightcurly.art/callback/'
 
 with open(SECRETS_DIR / 'hashed_password') as f:
     MAIN_PASSWORD = f.read()

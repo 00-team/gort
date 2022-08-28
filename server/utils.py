@@ -65,7 +65,7 @@ def save_bot_token(data: dict):
         json.dump(bot, f, indent=4)
 
 
-def get_logger(name: str, log_file=BASE_DIR / 'bot.log', level=logging.WARNING, formatter=base_formatter):
+def get_logger(name: str, log_file=BASE_DIR / 'server.log', level=logging.WARNING, formatter=base_formatter):
     formatter = logging.Formatter(formatter)
 
     handler = logging.FileHandler(log_file, encoding='utf-8')
