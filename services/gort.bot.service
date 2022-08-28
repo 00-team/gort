@@ -1,0 +1,13 @@
+[Unit]
+Description=Gort Bot
+
+[Service]
+Type=simple
+User=root
+# ExecStart=/nightcurly/.env/bin/python /site/nightcurly/Bot/run.py
+ExecStart=python main.py
+Environment=PYTHONUNBUFFERED=1
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
