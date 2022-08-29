@@ -11,6 +11,8 @@ logger = get_logger(__name__)
 
 TOKEN_URL = 'https://api.twitter.com/2/oauth2/token'
 SEARCH_URL = 'https://api.twitter.com/2/tweets/search/recent'
+HASHTAGS = ['pixelart', 'tntnft']
+TWEET_DELAY = 60
 
 
 with open(SECRETS_DIR / 'bot.json') as f:
@@ -61,10 +63,10 @@ def refresh_token():
         exit()
 
 
-def get_latest_tweet():
+def get_latest_tweet(hashtag: str):
     headers = {'Authorization': f'Bearer {KEYS["BEARER_TOKEN"]}'}
     params = {
-        'query': f'#pixelart -from:{BOT_INFO["id"]} -is:retweet',
+        'query': f'#{hashtag} -from:{BOT_INFO["id"]} -is:retweet',
     }
 
     # 450 requests per 15-minute
@@ -93,16 +95,19 @@ def retweet(tweet_id):
 
 def main() -> int:
     try:
-        if time.time() + 300 > BOT_INFO['expires_in']:
-            refresh_token()
+        for hashtag in HASHTAGS:
+            if time.time() + 300 > BOT_INFO['expires_in']:
+                refresh_token()
 
-        tweet_id = get_latest_tweet()
-        retweet(tweet_id)
+            tweet_id = get_latest_tweet(hashtag)
+            retweet(tweet_id)
+            time.sleep(TWEET_DELAY)
+
+        time.sleep(TWEET_DELAY)
     except Exception as e:
         logger.exception(e)
 
 
 if __name__ == '__main__':
     while True:
-        status = main()
-        time.sleep(67)
+        main()
