@@ -1,6 +1,5 @@
 
 import json
-import logging
 import time
 
 import httpx
@@ -8,7 +7,7 @@ import httpx
 from utils import SECRETS_DIR, get_logger, last_retweet
 
 
-logger = get_logger(__name__, level=logging.INFO)
+logger = get_logger(__name__)
 
 TOKEN_URL = 'https://api.twitter.com/2/oauth2/token'
 SEARCH_URL = 'https://api.twitter.com/2/tweets/search/recent'
@@ -85,10 +84,11 @@ def retweet(tweet_id):
 
     # 50 requests per 15-minute
     response = httpx.post(url, headers=headers, json={'tweet_id': tweet_id})
-    logger.info(response.text)
 
     if response.json().get('data', {}).get('retweeted'):
         last_retweet(tweet_id)
+    else:
+        logger.error(f'{response.status_code}:\n{response.text}')
 
 
 def main() -> int:
