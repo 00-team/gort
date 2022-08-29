@@ -1,6 +1,7 @@
 
 import json
 import time
+from itertools import cycle
 
 import httpx
 
@@ -12,7 +13,7 @@ logger = get_logger(__name__)
 TOKEN_URL = 'https://api.twitter.com/2/oauth2/token'
 SEARCH_URL = 'https://api.twitter.com/2/tweets/search/recent'
 HASHTAGS = ['pixelart', 'tntnft']
-TWEET_DELAY = 60
+TWEET_DELAY = 62
 
 
 with open(SECRETS_DIR / 'bot.json') as f:
@@ -94,20 +95,19 @@ def retweet(hashtag, tweet_id):
 
 
 def main() -> int:
-    try:
-        for hashtag in HASHTAGS:
+    for hashtag in cycle(HASHTAGS):
+        try:
             if time.time() + 300 > BOT_INFO['expires_in']:
                 refresh_token()
 
             tweet_id = get_latest_tweet(hashtag)
             retweet(hashtag, tweet_id)
-            time.sleep(TWEET_DELAY)
-    except Exception as e:
-        logger.exception(e)
 
-    time.sleep(TWEET_DELAY)
+        except Exception as e:
+            logger.exception(e)
+
+        time.sleep(TWEET_DELAY)
 
 
 if __name__ == '__main__':
-    while True:
-        main()
+    main()
