@@ -74,10 +74,10 @@ def get_latest_tweet(hashtag: str):
     return response['data'][0]['id']
 
 
-def retweet(tweet_id):
-    last_rt = last_retweet()
+def retweet(hashtag, tweet_id):
+    last_rt, last_h_rt = last_retweet(hashtag)
 
-    if last_rt == tweet_id:
+    if (last_h_rt == tweet_id) or (last_rt == tweet_id):
         return
 
     headers = {'Authorization': f'Bearer {BOT_INFO["access_token"]}'}
@@ -88,7 +88,7 @@ def retweet(tweet_id):
     response = httpx.post(url, headers=headers, json={'tweet_id': tweet_id})
 
     if response.json().get('data', {}).get('retweeted'):
-        last_retweet(tweet_id)
+        last_retweet(hashtag, tweet_id)
     else:
         logger.error(f'{response.status_code}:\n{response.text}')
 
@@ -100,12 +100,12 @@ def main() -> int:
                 refresh_token()
 
             tweet_id = get_latest_tweet(hashtag)
-            retweet(tweet_id)
+            retweet(hashtag, tweet_id)
             time.sleep(TWEET_DELAY)
-
-        time.sleep(TWEET_DELAY)
     except Exception as e:
         logger.exception(e)
+
+    time.sleep(TWEET_DELAY)
 
 
 if __name__ == '__main__':
