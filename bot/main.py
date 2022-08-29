@@ -64,7 +64,7 @@ def refresh_token():
 def get_latest_tweet():
     headers = {'Authorization': f'Bearer {KEYS["BEARER_TOKEN"]}'}
     params = {
-        'query': f'#pixelart -from:{BOT_INFO["id"]}',
+        'query': f'#pixelart -from:{BOT_INFO["id"]} -is:retweet',
     }
 
     # 450 requests per 15-minute
